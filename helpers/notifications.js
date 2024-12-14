@@ -26,7 +26,7 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
         const payload = {
             From: twilio.fromPhone,
             To: `+88${userPhone}`,
-            Body: userMsg
+            Body: userMsg,
         }
 
         // stringify the file for twilio
@@ -36,11 +36,29 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
         let options = {
             hostname: 'api.twilio.com',
             method: 'POST',
-            path: `/2010-04-01/Accounts/${AccountsSid}/${AccountsApi}`
+            path: `/2010-04-01/Accounts/${twilio.accountSid}/$Messages.json`,
+            auth: `${twilio.accountSid}:${twilio.authToken}`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         }
-        // send request via https
-       
-        https.request('')
+        // send request object via https 
+        const req = https.request(options, (res)=>{
+            const status = res.statusCode;
+            // callback successfully if the req went through
+            if(status == 200 || status == 201){
+                callback(false);
+            }else{
+                callback(`Status code returned was ${status}`);
+            }
+        });
+
+        req.on('error', (e)=>{
+            callback(e);
+        });
+
+        res.write(stringifyPayload);
+        res.end();
     }else{
         callback('Given parameters were missing or invalid');
     }

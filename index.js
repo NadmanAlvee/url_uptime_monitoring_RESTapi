@@ -28,13 +28,3 @@ app.handleReqRes = handleReqRes;
 
 // start the server
 app.createServer();
-
-// data.create('../', 'text', {name: 'nadman', occupation: 'student'}, (err)=>{
-//     console.log(err);
-// })
-// data.read('', 'text', (result)=>{
-//     console.log(result);
-// });
-
-// arr = 'https';
-// console.log(['http', 'https'].indexOf(arr));
