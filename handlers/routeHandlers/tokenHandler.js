@@ -6,7 +6,7 @@
 */
 
 // dependencies
-const CRUD = require('../../lib/data');
+const lib = require('../../lib/data');
 const {parseJSON} = require('../../helpers/utilities');
 const {hash} = require('../../helpers/utilities');
 const {generateToken} = require('../../helpers/utilities');
@@ -92,7 +92,7 @@ handler._token.get = (requestObjects, callback)=>{
 
     if(id){
         // search the id
-        CRUD.read('tokens', id, (errRead, file)=>{
+        lib.read('tokens', id, (errRead, file)=>{
             if(!errRead && file){
                 let tokenObject = { ...parseJSON(file)}
                 callback(200, {
@@ -121,12 +121,12 @@ handler._token.put = (requestObjects, callback)=>{
         ? requestObjects.body.extend 
         : false;
     if(id && extend){
-        CRUD.read('tokens', id, (err, file)=>{
+        lib.read('tokens', id, (err, file)=>{
             let tokenObject = {...parseJSON(file)};
             if(tokenObject.expires > Date.now()){
                 tokenObject.expires = Date.now() + (60 * 60 * 1000);
                 // store the updated token in database
-                CRUD.update('tokens', id, tokenObject, (errUpdate)=>{
+                lib.update('tokens', id, tokenObject, (errUpdate)=>{
                     if(!errUpdate){
                         callback(200);
                     }else{
@@ -155,9 +155,9 @@ handler._token.delete = (requestObjects, callback)=>{
         ? requestObjects.queryStreamObject.id : false;
     if(id){
         // user lookup
-        CRUD.read('tokens', id, (errRead, file)=>{
+        lib.read('tokens', id, (errRead, file)=>{
             if(!errRead && file){
-                CRUD.delete('tokens', id, (errDelete)=>{
+                lib.delete('tokens', id, (errDelete)=>{
                     if(!errDelete){
                         callback(200, {
                             "message": "Token deleted successfully",
@@ -183,7 +183,7 @@ handler._token.delete = (requestObjects, callback)=>{
 };
 
 handler._token.verify = (id, phone, callback) => {
-    CRUD.read('tokens', id, (error, tokenFile) => {
+    lib.read('tokens', id, (error, tokenFile) => {
         if (!error && tokenFile) {
             const parsedToken = parseJSON(tokenFile);
             if (parsedToken.phone === phone && parsedToken.expires > Date.now()) {
