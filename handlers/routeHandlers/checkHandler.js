@@ -10,7 +10,6 @@ const CRUD = require('../../lib/data');
 const { parseJSON,generateToken } = require('../../helpers/utilities');
 const tokenHandler = require('../../handlers/routeHandlers/tokenHandler');
 const { maxChecks } = require('./../../helpers/environments');
-const { user } = require('../../routes');
 
 // module scaffolding
 const handler = {};

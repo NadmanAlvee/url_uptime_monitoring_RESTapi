@@ -9,7 +9,6 @@
 const http = require('http');
 const {handleReqRes} = require('./helpers/handleReqRes');
 const environment = require('./helpers/environments');
-const data = require('./lib/data');
 
 // app object - module scaffolding
 const app = {};
@@ -31,8 +30,7 @@ app.handleReqRes = handleReqRes;
 app.createServer();
 
 //@ todo
-const{ sendTwilioSms } = require('./helpers/notifications');
-
+const { sendTwilioSms } = require('./helpers/notifications');
 sendTwilioSms('01763914143', 'Hello World', (err) => {
     console.log(err);
 });

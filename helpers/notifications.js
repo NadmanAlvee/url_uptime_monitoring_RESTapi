@@ -7,7 +7,7 @@
 
 // dependencies
 const https = require('https');
-const quesryString = require('querystring');
+const queryString = require('querystring');
 const {twilio} = require('./environments');
 
 // module scaffolding
@@ -31,13 +31,13 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
         }
 
         // stringify the file for twilio
-        const stringifyPayload = quesryString.stringify(payload);
+        const stringifyPayload = queryString.stringify(payload);
 
         // config the req details
         let options = {
             hostname: 'api.twilio.com',
             method: 'POST',
-            path: `/2010-04-01/Accounts/${twilio.accountSid}/$Messages.json`,
+            path: `/2010-04-01/Accounts/${twilio.accountSid}/Messages.json`,
             auth: `${twilio.accountSid}:${twilio.authToken}`,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -52,14 +52,14 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
             }else{
                 callback(`Status code returned was ${status}`);
             }
-
-            res.on('error', (e)=>{
-                callback(e);
-            });
-
-            res.write(stringifyPayload);
-            res.end();
         });
+
+        req.on('error', (e)=>{
+            callback(e);
+        });
+
+        req.write(stringifyPayload);
+        req.end();
     }else{
         callback('Given parameters were missing or invalid');
     }
