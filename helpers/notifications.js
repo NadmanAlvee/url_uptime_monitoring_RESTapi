@@ -9,7 +9,6 @@
 const https = require('https');
 const quesryString = require('querystring');
 const {twilio} = require('./environments');
-const { hostname } = require('os');
 
 // module scaffolding
 const notifications = {};
@@ -17,9 +16,11 @@ const notifications = {};
 // send sms to users using twilio API
 notifications.sendTwilioSms = (phone, msg, callback) => {
     // input validation
-    const userPhone = typeof(phone) === 'string' && phone.trim().length() === 11? phone.trim() : false;
+    const userPhone = typeof(phone) === 'string' && phone.trim().length === 11
+        ? phone.trim() : false;
 
-    const userMsg = typeof(msg) === 'string' && msg.trim().length() <= 1600? msg.trim() : false;
+    const userMsg = typeof(msg) === 'string' && msg.trim().length <= 1600
+        ? msg.trim() : false;
 
     if(userPhone && userMsg){
         // config the request payload
@@ -51,14 +52,14 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
             }else{
                 callback(`Status code returned was ${status}`);
             }
-        });
 
-        req.on('error', (e)=>{
-            callback(e);
-        });
+            res.on('error', (e)=>{
+                callback(e);
+            });
 
-        res.write(stringifyPayload);
-        res.end();
+            res.write(stringifyPayload);
+            res.end();
+        });
     }else{
         callback('Given parameters were missing or invalid');
     }

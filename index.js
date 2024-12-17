@@ -14,6 +14,7 @@ const data = require('./lib/data');
 // app object - module scaffolding
 const app = {};
 
+
 // create server
 app.createServer = function(){
     const server = http.createServer(app.handleReqRes); // app.handle will handle req res from server
@@ -28,3 +29,10 @@ app.handleReqRes = handleReqRes;
 
 // start the server
 app.createServer();
+
+//@ todo
+const{ sendTwilioSms } = require('./helpers/notifications');
+
+sendTwilioSms('01763914143', 'Hello World', (err) => {
+    console.log(err);
+});
