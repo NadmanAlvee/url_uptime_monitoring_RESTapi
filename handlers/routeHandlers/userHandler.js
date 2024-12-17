@@ -6,7 +6,7 @@
 */
 
 // dependencies
-const CRUD = require('../../lib/data');
+const lib = require('../../lib/data');
 const {parseJSON} = require('../../helpers/utilities');
 const {hash} = require('../../helpers/utilities');
 const tokenHandler = require('../../handlers/routeHandlers/tokenHandler');
@@ -36,7 +36,7 @@ handler._users.post = (requestObjects, callback)=>{
     const tosAgreement = typeof requestObjects.body.tosAgreement === 'boolean' ? requestObjects.body.tosAgreement : false;
     if(firstName && lastName && phone && password && tosAgreement){
         // checking if user already exists
-        CRUD.read('users', phone, (readErr)=>{
+        lib.read('users', phone, (readErr)=>{
             if(readErr){
                 // create user
                 let userObject = {
@@ -46,7 +46,7 @@ handler._users.post = (requestObjects, callback)=>{
                     password: hash(password),
                     tosAgreement,
                 }
-                CRUD.create('users', phone, userObject, (errCreate)=>{
+                lib.create('users', phone, userObject, (errCreate)=>{
                     if(errCreate){
                         callback(500, {'error': 'Could not create user!'});
                     }else{
@@ -76,7 +76,7 @@ handler._users.get = (requestObjects, callback)=>{
         tokenHandler._token.verify(token, phone, (bool)=>{
             if(bool){
                 // <user lookup>
-                CRUD.read('users', phone, (error, file)=>{
+                lib.read('users', phone, (error, file)=>{
                     if(!error && file){
                         let userData = { ...parseJSON(file)}
                         delete userData.password;
@@ -119,7 +119,7 @@ handler._users.put = (requestObjects, callback)=>{
             tokenHandler._token.verify(token, phone, (bool)=>{
             if(bool){
                 // <user lookup>
-                CRUD.read('users', phone, (errRead, file)=>{
+                lib.read('users', phone, (errRead, file)=>{
                     let userData = {...parseJSON(file)};
                     if(!errRead && userData){
                         if(firstName){
@@ -132,7 +132,7 @@ handler._users.put = (requestObjects, callback)=>{
                             userData.password = hash(password);
                         }
                         // update database
-                        CRUD.update('users', phone, userData, (errWrite)=>{
+                        lib.update('users', phone, userData, (errWrite)=>{
                             if(!errWrite){
                                 callback(200, {
                                     "message": "user updated successfully",
@@ -178,9 +178,9 @@ handler._users.delete = (requestObjects, callback)=>{
         tokenHandler._token.verify(token, phone, (bool)=>{
             if(bool){
                 // <user lookup>
-                CRUD.read('users', phone, (errRead, file)=>{
+                lib.read('users', phone, (errRead, file)=>{
                 if(!errRead && file){
-                    CRUD.delete('users', phone, (errDelete)=>{
+                    lib.delete('users', phone, (errDelete)=>{
                         if(!errDelete){
                             callback(200, {
                                 "message": "user deleted successfully",

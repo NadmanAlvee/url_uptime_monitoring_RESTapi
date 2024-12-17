@@ -39,7 +39,7 @@ handler._token.post = (requestObjects, callback)=>{
         : false;
     if(phone && password){
         // matching the given phone & password
-        CRUD.read('users', phone, (errRead, file)=>{
+        lib.read('users', phone, (errRead, file)=>{
             if(!errRead && file){
                 const userData = {...parseJSON(file)};
                 let passwd = hash(password);
@@ -55,7 +55,7 @@ handler._token.post = (requestObjects, callback)=>{
                     }
 
                     // saving the token in database
-                    CRUD.create('tokens', tokenID, tokenObject, (errWrite)=>{
+                    lib.create('tokens', tokenID, tokenObject, (errWrite)=>{
                         if(!errWrite){
                             callback(200, {
                                 message: "token generated successfully"
